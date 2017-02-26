@@ -1036,6 +1036,8 @@ module.exports = function(list) {
     list.handlers.searchStart = list.handlers.searchStart || [];
     list.handlers.searchComplete = list.handlers.searchComplete || [];
 
+    window.triggerSearch = searchMethod;
+
     events.bind(getByClass(list.listContainer, list.searchClass), 'keyup', function(e) {
         var target = e.target || e.srcElement, // IE have srcElement
             alreadyCleared = (target.value === "" && !list.searched);

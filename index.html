@@ -14,10 +14,12 @@
   <meta name='viewport' content='width=device-width, initial-scale=1.0'/>
   <link href='//fonts.googleapis.com/css?family=Roboto:400,700,900,400italic' rel='stylesheet' type='text/css'>
   <link rel='stylesheet' type='text/css' href='css/style.css'>
+  <link rel='stylesheet' type='text/css' href='css/selectize.css'>
   <link rel="shortcut icon" href="http://nealrs.github.io/devpost-follow-button/icon/devpost-128.png">
   <script type='text/javascript' src='//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
   <script type='text/javascript' src='js/papaparse.min.js'></script>
   <script type='text/javascript' src='js/mustache.min.js'></script>
+  <script type='text/javascript' src="js/selectize.min.js"></script>
   <script type='text/javascript' src="js/list.js"></script>
 </head>
 
@@ -25,9 +27,9 @@
   <div class="container">
     <div id="header">
       <h1>
-        <a href="https://wichacks2017.devpost.com" title="WiCHacks Expo" style="width: 100%; background: #8560a8; display: block; padding: 20px">
+        <div title="WiCHacks Expo" style="width: 100%; background: #8560a8; display: block; padding: 20px">
           <img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/challenge_photos/000/455/961/datas/full_width.png" style="vertical-align:middle; width:220px;">
-        </a>
+        </div>
       <h1>
     </div>
     <div id="fullTable"></div>
@@ -90,13 +92,21 @@
         complete: function(results) {
           tableData = results;
 
+          var sponsors = {};
+
           // print raw data
           //console.log(tableData);
           // add commas to sponsor prize data
           for (var x in tableData.data) {
             var s = tableData.data[x]['sponsors'];
             tableData.data[x]['sponsors'] = s.replace(/,/ig, ", ");
+            var parsed = s.split(",");
+            for (var sponsorIndex in parsed) {
+              var sponsor = parsed[sponsorIndex].trim();
+              sponsors[sponsor] = { name: sponsor };
+            }
           }
+
           // print cleaned data
           console.log(tableData);
 
@@ -120,6 +130,18 @@
             $("#filter").val(filter);
             userList.search(filter);
           };
+
+          $('#filter').selectize({
+            persist: false,
+            maxItems: 1,
+            valueField: 'name',
+            labelField: 'name',
+            searchField: ['name'],
+            options: Object.values(sponsors),
+            onChange: function(value) {
+              window.triggerSearch(value);
+            }
+          });
   	    }
       });
 
