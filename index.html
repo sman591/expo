@@ -37,7 +37,7 @@
 
   <script id="template" type="x-tmpl-mustache">
     <div class="search_container">
-      <input class="search" type="search" placeholder="Filter by sponsor prize" id="filter"/>
+      <input class="search" type="search" placeholder="Filter by sponsor prize or project name" id="filter"/>
     </div>
     <table id="expoTable">
       <thead>
@@ -92,18 +92,25 @@
         complete: function(results) {
           tableData = results;
 
-          var sponsors = {};
+          var searchOptions = {};
 
           // print raw data
           //console.log(tableData);
           // add commas to sponsor prize data
           for (var x in tableData.data) {
-            var s = tableData.data[x]['sponsors'];
+            var submission = tableData.data[x];
+            var title = submission['title'];
+            var tablenumber = submission['table'];
+
+            searchOptions[title] = { name: title, display: 'Project: ' + title };
+            // searchOptions[tablenumber] = { name: tablenumber, display: 'Table: ' + tablenumber }; unintuitive, don't use
+
+            var s = submission['sponsors'];
             tableData.data[x]['sponsors'] = s.replace(/,/ig, ", ");
             var parsed = s.split(",");
             for (var sponsorIndex in parsed) {
               var sponsor = parsed[sponsorIndex].trim();
-              sponsors[sponsor] = { name: sponsor };
+              searchOptions[sponsor] = { name: sponsor, display: 'Prize: ' + sponsor };
             }
           }
 
@@ -135,9 +142,9 @@
             persist: false,
             maxItems: 1,
             valueField: 'name',
-            labelField: 'name',
-            searchField: ['name'],
-            options: Object.values(sponsors),
+            labelField: 'display',
+            searchField: ['name', 'display'],
+            options: Object.values(searchOptions),
             onChange: function(value) {
               window.triggerSearch(value);
             }
