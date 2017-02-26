@@ -21,6 +21,8 @@
   <script type='text/javascript' src='js/mustache.min.js'></script>
   <script type='text/javascript' src="js/selectize.min.js"></script>
   <script type='text/javascript' src="js/list.js"></script>
+  <script type='text/javascript' src="js/md5.min.js"></script>
+  <script type='text/javascript' src="js/versioning.js"></script>
 </head>
 
 <body>
@@ -90,6 +92,7 @@
         download: true,
         header: true,
         complete: function(results) {
+          window.updateVersionData(results);
           tableData = results;
 
           var searchOptions = {};
