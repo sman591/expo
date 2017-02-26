@@ -105,6 +105,7 @@ input {
   font-size: 16px;
   padding: 8px;
   font-family: sans-serif;
+  -webkit-appearance: none;
 }
 .search_container{
   text-align:center;
